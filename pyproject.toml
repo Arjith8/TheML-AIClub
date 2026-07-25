@@ -5,10 +5,22 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "pandas-stubs>=3.0.3.260530",
+    "seaborn>=0.13.2",
     "torch>=2.13.0",
     "torchvision>=0.28.0",
 ]
 
 [[tool.uv.index]]
-url = "https://download.pytorch.org/whl/cpu"
+name = "pypi"
+url = "https://pypi.org/simple"
 default = true
+
+[[tool.uv.index]]
+name = "pytorch"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch" }
+torchvision = { index = "pytorch" }
