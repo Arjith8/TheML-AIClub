@@ -1,10 +1,13 @@
 from pathlib import Path
 
+import torch
+
 from logistic_regression.dataset import create_dataset
 from logistic_regression.model import LogisticRegression
 from utils.plot import loss_plot
 
 def main():
+    _ = torch.manual_seed(42)       ## pyright: ignore[reportUnknownMemberType]
     x, y = create_dataset()
 
     model = LogisticRegression(input_dim=2)
