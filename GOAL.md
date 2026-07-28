@@ -1,1 +1,3 @@
 - [] create an autograd on my own
+    - It sorta felt like magic but now its starting to click, considering I thought about it in the morning as well as now. 
+    - write up and implementation tmrw........ yayyyy more exciting than I thought
