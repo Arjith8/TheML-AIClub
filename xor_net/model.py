@@ -15,10 +15,18 @@ class XORNet:
 
         self.out_w: torch.Tensor = torch.randn(hidden_layer_neurons, 1, requires_grad=True)
         self.out_b: torch.Tensor = torch.randn(1, requires_grad=True)
+        self.flag = True
 
     def train(self, x: torch.Tensor, y: torch.Tensor, epochs: int = 1000, log_step:int = 100, learning_rate: float = 0.01):
         loss_history: list[LossStep] = []
         for epoch in range(epochs):
+            if self.flag:
+                print("x", x)
+                print("y", y)
+                print("w", self.w)
+                print("b", self.b)
+            if epoch == 10:
+                self.flag = False
             y_pred = self.forward(x)
             loss = self.error(y_pred, y)
             if not epoch % log_step:
@@ -35,6 +43,16 @@ class XORNet:
                 b_grad = self.b.grad
                 out_w_grad = self.out_w.grad
                 out_b_grad = self.out_b.grad
+                if self.flag:
+                    print("y_pred: ", y_pred)
+                    print("loss: ", loss)
+                    print(f"""
+                    w_grad: \t{w_grad}
+                    b_grad: \t{b_grad}
+                    out_w_grad:\t {out_w_grad}
+                    out_b_grad:\t {out_b_grad}
+                    """)
+                    print()
 
                 self.out_w -= learning_rate * out_w_grad
                 self.out_b -= learning_rate * out_b_grad
@@ -55,6 +73,10 @@ class XORNet:
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         z = self.activation(x @ self.w + self.b)
         h = sigmoid(z @ self.out_w + self.out_b)
+        
+        if self.flag:
+            print("z", z)
+            print("h", h)
         return h
     def activation(self, z: torch.Tensor):
         return RELU(z)
