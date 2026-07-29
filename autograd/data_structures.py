@@ -1,3 +1,5 @@
+# c7a9c53: Mmmm I am not as close to solution as I thought I will be I think I need a few more days, I have decided on the base
+# data structure but the backwards method I need to think more about it I will need to know what the operators are too so ig thats the next step say but backwards how will i implement it....
 class Value:
     def __init__(self, val: float, parents: list[Value] | None = None, gradient: float = 0.0):
         self.val: float = val
