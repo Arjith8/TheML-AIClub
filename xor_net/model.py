@@ -3,6 +3,7 @@ import torch
 from utils.activations.relu import RELU
 from utils.activations.sigmoid import sigmoid
 from utils.loss_functions.bce import BCE
+from utils.optimizer.base import Optimizer
 from utils.plot import LossStep
 
 
@@ -20,7 +21,7 @@ class XORNet:
     def parameters(self):
         return [self.w, self.b, self.out_w, self.out_b]
 
-    def train(self, x: torch.Tensor, y: torch.Tensor, optimizer, epochs: int = 1000, log_step:int = 100):
+    def train(self, x: torch.Tensor, y: torch.Tensor, optimizer: Optimizer, epochs: int = 1000, log_step:int = 100):
         loss_history: list[LossStep] = []
         for epoch in range(epochs):
             if self.flag:
