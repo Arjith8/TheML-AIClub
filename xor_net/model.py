@@ -21,7 +21,7 @@ class XORNet:
     def parameters(self):
         return [self.w, self.b, self.out_w, self.out_b]
 
-    def train(self, x: torch.Tensor, y: torch.Tensor, optimizer: Optimizer, epochs: int = 1000, log_step:int = 100):
+    def train(self, x: torch.Tensor, y: torch.Tensor, regularization: int | None, optimizer: Optimizer, regularization_strength: float = 0,epochs: int = 1000, log_step:int = 100):
         loss_history: list[LossStep] = []
         for epoch in range(epochs):
             if self.flag:
@@ -32,7 +32,7 @@ class XORNet:
             if epoch == 10:
                 self.flag = False
             y_pred = self.forward(x)
-            loss = self.error(y_pred, y)
+            loss = self.error(y_pred, y, regularization, regularization_strength)
             if not epoch % log_step:
                 loss_history.append(LossStep(loss.item(), epoch))
 
@@ -41,8 +41,15 @@ class XORNet:
                 optimizer.step_zero_grad()
         return loss_history
     
-    def error(self, y_pred: torch.Tensor, y: torch.Tensor):
-        return BCE(y_pred = y_pred, y = y)
+    def error(self, y_pred: torch.Tensor, y: torch.Tensor, regularization: int | None, regularization_strength: float):
+        loss = BCE(y_pred = y_pred, y = y)
+        if regularization:
+            penalty = (
+                torch.sum(torch.abs(self.w) ** regularization)
+                + torch.sum(torch.abs(self.out_w) ** regularization)
+            )
+            loss += regularization_strength * penalty
+        return loss
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         z = self.activation(x @ self.w + self.b)
