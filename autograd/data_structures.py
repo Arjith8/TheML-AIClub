@@ -5,52 +5,44 @@ from typing import Literal
 
 type Operation = Literal["+", "*"] | None
 class Value:
-    def __init__(self, val: float, parents: list[Value] | None = None, gradient: float = 0.0):
+    def __init__(self, val: float, parents: list[Value] | None = None, operation: Operation = None):
         self.val: float = val
         self.parents: list[Value] = [] if parents is None else parents
-        self.gradient: float = gradient
-        self.operation: Operation = None
+        self.gradient: float = 0.0
+        self.operation: Operation = operation
 
     def __add__(self, other: Value | int | float) -> Value:
-        print("Add")
-        node = Value(self.val)
-        node.parents.append(self)
         if not isinstance(other, Value):
-            node.val += other
-        else:
-            node.val += other.val
-            node.parents.append(other)
-        node.operation = "+"
-        return node
+            other = Value(other)
+
+        return Value(val = self.val + other.val, parents=[self, other], operation="+")
 
     def __radd__(self, other: int | float) -> Value:
         return self + other
 
     def __mul__(self, other: Value | int | float) -> Value:
-        node = Value(val = self.val)
-        node.parents.append(self)
         if not isinstance(other, Value):
-            node.val *= other
-        else:
-            node.val *= other.val
-            node.parents.append(other)
-        node.operation = "*"
-        return node
+            other = Value(other)
+        return Value(val = self.val * other.val, parents=[self, other], operation="*")
 
     def __rmul__(self, other: int | float) -> Value:
         return self * other
     
     def backwards(self) -> None:
-        if not self.parents:
+        if not self.gradient:
             self.gradient = 1.0
-            return
         
+
+        parents = self.parents
         match self.operation:
             case "+":
-                self.parents[0].backwards()
-                self.gradient += self.parents[0].gradient
-                if len(self.parents) == 2:
-                    self.parents[1].backwards()
-                    self.gradient += self.parents[1].gradient
+                for parent in parents:
+                    parent.gradient += self.gradient * 1
+                    parent.backwards()
+            case "*":
+                parents[0].gradient += self.gradient * parents[1].val
+                parents[1].gradient += self.gradient * parents[0].val
+                parents[0].backwards()
+                parents[1].backwards()
             case _:
-                print("unknown opn")
+                pass
