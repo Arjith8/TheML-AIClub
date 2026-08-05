@@ -1,5 +1,6 @@
 # c7a9c53: Mmmm I am not as close to solution as I thought I will be I think I need a few more days, I have decided on the base
 # data structure but the backwards method I need to think more about it I will need to know what the operators are too so ig thats the next step say but backwards how will i implement it....
+from collections import deque
 from typing import Literal
 
 
@@ -27,22 +28,35 @@ class Value:
 
     def __rmul__(self, other: int | float) -> Value:
         return self * other
-    
-    def backwards(self) -> None:
+
+    def backwards(self):
         if not self.gradient:
             self.gradient = 1.0
-        
 
-        parents = self.parents
-        match self.operation:
-            case "+":
-                for parent in parents:
-                    parent.gradient += self.gradient * 1
-                    parent.backwards()
-            case "*":
-                parents[0].gradient += self.gradient * parents[1].val
-                parents[1].gradient += self.gradient * parents[0].val
-                parents[0].backwards()
-                parents[1].backwards()
-            case _:
-                pass
+        topologically_sorted_graph: list[Value] = []
+        stack: list[tuple[Value, bool]] = []
+        visited: set[Value] = set()
+        visited.add(self)
+        stack.append((self, False))
+        while stack:
+            current, expanded = stack.pop()
+            if not expanded:
+                stack.append((current, True))
+                for i in current.parents:
+                    if i not in visited:
+                        visited.add(i)
+                        stack.append((i, False))
+                continue
+            topologically_sorted_graph.append(current)
+        for current in reversed(topologically_sorted_graph):
+            parents = current.parents
+            match current.operation:
+                case "+":
+                    parents[0].gradient += current.gradient * 1
+                    parents[1].gradient += current.gradient * 1
+
+                case "*":
+                    parents[0].gradient += current.gradient * parents[1].val
+                    parents[1].gradient += current.gradient * parents[0].val
+                case _:
+                    pass
