@@ -26,6 +26,28 @@
                 - Ya I cant have that I mean I cant change the dimensions at say the activation or norm layer as thats not what they are for
 
     - So `Class Linear` which has 2 member vars related to input and output dim set by users rest ig we will do it ourselves
+        - But I want multiple layers to be able to pass infomation from one layer to another
+
+- Ig as a base case say my NN is only one linear layer and say thats it, then how do i do this?
+    - Say we have some class `Linear` then it will have the linear specific params such as w and b but how do i pass data to it
+    - I mean I could do something like hey `Linear(x)` sorta way but what if I have more layers, then I will have to do something like
+```
+layer1_activations = Linear(x)
+```
+- This would be a bit tedious, I have to take results then each layer will have to at some point be added to variables since as it grows we will have something like
+```
+Sigmoid(Linear(Relu(Linear(x))))
+```
+- I kinda like this syntax of writing, but what would be its cons
+    - I can assume that data will fall through properly, we just need a data param
+    - But how will I keep known from one layer to another. Mmmm 5 min of thought and this is a bad idea
+        1. I have to keep track of `w`s and `b`s which since its a function will go outa scope so will have to return it.
+            - Or I will have to store it in a some store that acts as a data store but then every layer is heaviliy dependent on one source mmm I dont like the idea
+
+- Since I wouldve needed a data store in the first place mught as well revert back to using classes
+    - So as before we have `class Linear` say if we were to take inspiration from pytorch I will need some syntax where I can easily switch between non gradient requiring and gradient requiring layer
+- How should I do this, I will need some parent class which will act as a intermediatery between layers, I dont want to have to move activations around manually
+
 
 
 ## Things I noticed along the way
