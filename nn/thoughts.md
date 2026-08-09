@@ -47,8 +47,24 @@ Sigmoid(Linear(Relu(Linear(x))))
 - Since I wouldve needed a data store in the first place mught as well revert back to using classes
     - So as before we have `class Linear` say if we were to take inspiration from pytorch I will need some syntax where I can easily switch between non gradient requiring and gradient requiring layer
 - How should I do this, I will need some parent class which will act as a intermediatery between layers, I dont want to have to move activations around manually
+    - So weights in class, actications in a parent
+    - The layers that dont require gradients it should be a easy handle
+    - the parent class for both required grad and not grad will have to be same?
+    - ig thats its this should be the ok base
 
 
+## Plan
+- We will follow a api similar to torch this is what I intend to do
+    - We will use Sequencial as sorta like a data store, the usage will be similar to following
+```
+Sequencial([Linear(2,4), ReLU()])
+```
+- Inside `Sequential` we will store the activation state for the next layer and we will update it based on output of each layer, ie, we only retain the activation of the most recent layer
+- Ahhh I think there might be some issuess with this
+    - I was reading into CNN for inspiration since I didnt want to build an API and then have to rebuild again, so CNN was first then it woul've been transformers
+        - when I read about ResNet I realised it has this thing where it will skip some layers, ig this is called residual block and its was introduced when researchers realised large CNNs are actually doing a poor job at generalization when compared to smaller CNNs for some reason idk why yet I havent read all that jjust saw this and realised I might be going in wrong direction.
+            - I havent gone deep into it yet but if I am not wrong what it will do is we will keep a specifc activation from the past such that if some layer returns value closer to zero we will use this I, if I want to allow it I will need to store a list of activation when coming to skip connections but then it becomes unnecessarily complex and this might only ever be used for CNNs that too on some models I think I will go with the easier way
+                - Which is to just have a variable keep track of the activation, inside whatevr function that runs the forward pass for each layer
 
 ## Things I noticed along the way
 - When I first implemented Linear class I thought I will use rand instead of randn because even in the other ones when I asked queries I just always used randn so I thought it was standard.
