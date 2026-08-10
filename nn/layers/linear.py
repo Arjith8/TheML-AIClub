@@ -11,10 +11,15 @@ class Linear(Layer):
         self.w: torch.Tensor = torch.rand(self.in_features, out_features, requires_grad=True)
         self.b: torch.Tensor = torch.rand(1, out_features, requires_grad=True)
 
+    @property
+    @override
+    def parameters(self) -> list[torch.Tensor]:
+        return [self.w, self.b]
+
     @override
     def forward(self, x: torch.Tensor):
         return x @ self.w + self.b
-
+    
     @override
     def __call__(self, data: torch.Tensor) -> torch.Tensor:
         return self.forward(data)
