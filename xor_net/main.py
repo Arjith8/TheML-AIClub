@@ -15,7 +15,7 @@ def main():
     model = XORNet(hidden_layer_neurons=100)
     optimizer = Momentum(learning_rate = 0.1, params = model.parameters(), beta=0.9)
 
-    loss_history = model.train(x, y, optimizer, epochs=10000, log_step = 1)
+    loss_history = model.train(x, y, epochs=10000, log_step = 1, optimizer=optimizer)
 
     save_path = Path(__file__).resolve().parent
     loss_plot(loss_history, save_path = save_path)

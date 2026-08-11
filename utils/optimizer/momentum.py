@@ -14,16 +14,17 @@ class Momentum(Optimizer):
 
     @override
     def step_zero_grad(self) -> None:
-        for i, param in enumerate(self.params):
-            prev_u = self.u[i]
+        with torch.no_grad():
+            for i, param in enumerate(self.params):
+                prev_u = self.u[i]
 
-            assert param.grad is not None
-            grad = param.grad
+                assert param.grad is not None
+                grad = param.grad
 
-            u = self.beta * prev_u + grad
+                u = self.beta * prev_u + grad
 
-            param -= self.learning_rate * u
+                param -= self.learning_rate * u
 
-            self.u[i] = u
-            _ = grad.zero_()
+                self.u[i] = u
+                _ = grad.zero_()
 

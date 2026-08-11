@@ -21,7 +21,7 @@ class XORNet:
     def parameters(self):
         return [self.w, self.b, self.out_w, self.out_b]
 
-    def train(self, x: torch.Tensor, y: torch.Tensor, regularization: int | None, optimizer: Optimizer, regularization_strength: float = 0,epochs: int = 1000, log_step:int = 100):
+    def train(self, x: torch.Tensor, y: torch.Tensor, optimizer: Optimizer, regularization: int | None = None, regularization_strength: float = 0,epochs: int = 1000, log_step:int = 100):
         loss_history: list[LossStep] = []
         for epoch in range(epochs):
             if self.flag:
