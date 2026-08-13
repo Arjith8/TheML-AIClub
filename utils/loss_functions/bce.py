@@ -2,6 +2,8 @@ import torch
 
 
 def BCE(y: torch.Tensor, y_pred: torch.Tensor):
+    if y.shape != y_pred.shape:
+        raise ValueError("Shapes of prediction and actual values dont match")
     eps = torch.finfo(y_pred.dtype).eps
     y_pred = y_pred.clamp(eps, 1 - eps)
 
