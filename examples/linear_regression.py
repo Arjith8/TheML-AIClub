@@ -1,7 +1,7 @@
 import torch
 
 from examples.data_mocks.regression_tasks import create_regression_dataset
-from nn.container.sequencial import Sequential
+from nn.container.sequential import Sequential
 from nn.layers.linear import Linear
 from utils.loss_functions.mse import MSE
 from utils.optimizer.momentum import Momentum

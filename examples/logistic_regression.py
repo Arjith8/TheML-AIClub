@@ -1,7 +1,7 @@
 import torch
 
 from examples.data_mocks.classification_tasks import create_classification_dataset
-from nn.container.sequencial import Sequential
+from nn.container.sequential import Sequential
 from nn.layers.linear import Linear
 from nn.layers.sigmoid import Sigmoid
 from utils.loss_functions.bce import BCE
