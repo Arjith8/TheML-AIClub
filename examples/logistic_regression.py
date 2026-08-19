@@ -11,10 +11,10 @@ from utils.optimizer.momentum import Momentum
 def main():
     _ = torch.manual_seed(42)       # pyright: ignore[reportUnknownMemberType]
     num_classes = 2
-    data = create_classification_dataset(2, 10, num_classes)
+    data = create_classification_dataset(23, 1000, num_classes)
     
     model = Sequential([
-        Linear(2, 1),
+        Linear(23, 1),
         Sigmoid(),
     ])
     
@@ -31,7 +31,7 @@ def main():
             batch_start_idx = batch*batch_size
             x_batch = x[batch_start_idx: batch_start_idx+batch_size]
             y_batch = y[batch_start_idx: batch_start_idx+batch_size]
-            y_pred = model(x_batch).squeeze(1)
+            y_pred = model(x_batch)
 
             loss = BCE(y_batch, y_pred)
             loss.backward()                         # pyright: ignore[reportUnusedCallResult, reportUnknownMemberType]
